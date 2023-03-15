@@ -283,72 +283,32 @@ export class ExperimentHandler extends PsychObject
 			this._trialsData = [];
 		}
 
-		// save to a .csv file:
-		if (this._psychoJS.config.experiment.saveFormat === ExperimentHandler.SaveFormat.CSV)
+		// Report a json
+		const gitlabConfig = this._psychoJS.config.gitlab;
+		const __projectId = (typeof gitlabConfig !== "undefined" && typeof gitlabConfig.projectId !== "undefined") ? gitlabConfig.projectId : undefined;
+
+		let documents = [];
+
+		for (let r = 0; r < data.length; r++)
 		{
-			// note: we use the XLSX library as it automatically deals with header, takes care of quotes,
-			// newlines, etc.
-			// TODO only save the given attributes
-			const worksheet = XLSX.utils.json_to_sheet(data);
-			// prepend BOM
-			const csv = "\ufeff" + XLSX.utils.sheet_to_csv(worksheet);
+			let doc = {
+				__projectId,
+				__experimentName: this._experimentName,
+				__participant: this._participant,
+				__session: this._session,
+				__datetime: this._datetime
+			};
+			for (let h = 0; h < attributes.length; h++)
+			{
+				doc[attributes[h]] = data[r][attributes[h]];
+			}
 
-			// upload data to the pavlovia server or offer them for download:
-			const filenameWithoutPath = this._dataFileName.split(/[\\/]/).pop();
-			const key = `${filenameWithoutPath}${tag}.csv`;
-			if (
-				this._psychoJS.getEnvironment() === ExperimentHandler.Environment.SERVER
-				&& this._psychoJS.config.experiment.status === "RUNNING"
-				&& !this._psychoJS._serverMsg.has("__pilotToken")
-			)
-			{
-				return /*await*/ this._psychoJS.serverManager.uploadData(key, csv, sync);
-			}
-			else
-			{
-				util.offerDataForDownload(key, csv, "text/csv");
-			}
+			documents.push(doc);
 		}
-		// save to the database on the pavlovia server:
-		else if (this._psychoJS.config.experiment.saveFormat === ExperimentHandler.SaveFormat.DATABASE)
-		{
-			const gitlabConfig = this._psychoJS.config.gitlab;
-			const __projectId = (typeof gitlabConfig !== "undefined" && typeof gitlabConfig.projectId !== "undefined") ? gitlabConfig.projectId : undefined;
 
-			let documents = [];
-
-			for (let r = 0; r < data.length; r++)
-			{
-				let doc = {
-					__projectId,
-					__experimentName: this._experimentName,
-					__participant: this._participant,
-					__session: this._session,
-					__datetime: this._datetime
-				};
-				for (let h = 0; h < attributes.length; h++)
-				{
-					doc[attributes[h]] = data[r][attributes[h]];
-				}
-
-				documents.push(doc);
-			}
-
-			// upload data to the pavlovia server or offer them for download:
-			if (
-				this._psychoJS.getEnvironment() === ExperimentHandler.Environment.SERVER
-				&& this._psychoJS.config.experiment.status === "RUNNING"
-				&& !this._psychoJS._serverMsg.has("__pilotToken")
-			)
-			{
-				const key = "results"; // name of the mongoDB collection
-				return /*await*/ this._psychoJS.serverManager.uploadData(key, JSON.stringify(documents), sync);
-			}
-			else
-			{
-				util.offerDataForDownload("results.json", JSON.stringify(documents), "application/json");
-			}
-		}
+		// report data as json
+		window.reportResult("results.json", JSON.stringify(documents), "application/json");			
+	
 	}
 
 	/**

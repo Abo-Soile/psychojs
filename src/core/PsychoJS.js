@@ -191,6 +191,10 @@ export class PsychoJS
 		// hide the initialisation message:
 		const root = document.getElementById("root");
 		root.classList.add("is-ready");
+		if(!window.reportResult)
+		{
+			window.reportResult = util.offerDataForDownload;
+		}
 	}
 
 	/**
@@ -838,7 +842,7 @@ export class PsychoJS
 			}
 			self._gui.dialog({ error: error?.reason });
 			return true;
-		};
+		};		
 	}
 
 	/**
