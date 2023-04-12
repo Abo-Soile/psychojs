@@ -601,6 +601,7 @@ export class PsychoJS
 				{
 					window.location = this._cancellationUrl;
 				}
+				window.submitResults();
 			};
 
 			if (showOK)

@@ -266,15 +266,8 @@ export class ExperimentHandler extends PsychObject
 					}
 				}
 			}
-			for (let a in this.extraInfo)
-			{
-				if (this.extraInfo.hasOwnProperty(a))
-				{
-					attributes.push(a);
-				}
-			}
-		}
-
+			
+		}		
 		let data = this._trialsData;
 		// if the experiment data have to be cleared, we first make a copy of them:
 		if (clear)
@@ -282,25 +275,31 @@ export class ExperimentHandler extends PsychObject
 			data = this._trialsData.slice();
 			this._trialsData = [];
 		}
-
+		let results = {__datetime: this._datetime};
+		// we only need this information once, and it should be in every slice.
+		for (let a in this.extraInfo)
+		{
+			if (this.extraInfo.hasOwnProperty(a))
+			{
+				results[a] = data[0][this.extraInfo[a]];
+			}
+		}
 		// Report a json
 		let documents = [];
 
 		for (let r = 0; r < data.length; r++)
 		{
-			let doc = {
-				__datetime: this._datetime
-			};
+			let doc = {};
 			for (let h = 0; h < attributes.length; h++)
 			{
 				doc[attributes[h]] = data[r][attributes[h]];
 			}
-
+			
 			documents.push(doc);
 		}
-
+		results['expData'] = documents;
 		// report data as json
-		window.reportResult("results.json", JSON.stringify(documents), "application/json");			
+		window.reportResult("results.json", JSON.stringify(results), "application/json");			
 	
 	}
 
