@@ -281,7 +281,7 @@ export class ExperimentHandler extends PsychObject
 		{
 			if (this.extraInfo.hasOwnProperty(a))
 			{
-				results[a] = data[0][this.extraInfo[a]];
+				results[a] = data[0][a];
 			}
 		}
 		// Report a json
@@ -299,7 +299,7 @@ export class ExperimentHandler extends PsychObject
 		}
 		results['expData'] = documents;
 		// report data as json
-		window.reportResult("results.json", JSON.stringify(results), "application/json");			
+		window.reportResult("results.json", results, "application/json");			
 	
 	}
 
