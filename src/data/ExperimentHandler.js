@@ -284,18 +284,11 @@ export class ExperimentHandler extends PsychObject
 		}
 
 		// Report a json
-		const gitlabConfig = this._psychoJS.config.gitlab;
-		const __projectId = (typeof gitlabConfig !== "undefined" && typeof gitlabConfig.projectId !== "undefined") ? gitlabConfig.projectId : undefined;
-
 		let documents = [];
 
 		for (let r = 0; r < data.length; r++)
 		{
 			let doc = {
-				__projectId,
-				__experimentName: this._experimentName,
-				__participant: this._participant,
-				__session: this._session,
 				__datetime: this._datetime
 			};
 			for (let h = 0; h < attributes.length; h++)
