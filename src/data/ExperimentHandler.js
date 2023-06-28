@@ -349,6 +349,28 @@ export class ExperimentHandler extends PsychObject
 				util.offerDataForDownload("results.json", JSON.stringify(documents), "application/json");
 			}
 		}
+		// handle in case of SOILE
+		else if (this._psychoJS.config.experiment.saveFormat === ExperimentHandler.SaveFormat.SOILE)
+		{
+			let documents = [];
+
+			for (let r = 0; r < data.length; r++)
+			{
+				let doc = {
+					__datetime: this._datetime
+				};
+				for (let h = 0; h < attributes.length; h++)
+				{
+					doc[attributes[h]] = data[r][attributes[h]];
+				}
+
+				documents.push(doc);
+			}
+			const results = {};
+			results['expData'] = documents;			
+			// Report data to SOILE
+			window.reportResult("results.json", JSON.stringify(results), "application/json");
+		}
 	}
 
 	/**
@@ -427,6 +449,11 @@ ExperimentHandler.SaveFormat = {
 	 * Results are saved to a database
 	 */
 	DATABASE: Symbol.for("DATABASE"),
+
+	/**
+	 * Upload Results to using SOILE
+	 */
+	SOILE: Symbol.for("SOILE"),
 };
 
 /**
