@@ -581,38 +581,50 @@ export class PsychoJS
 						URL: "https://pavlovia.org",
 					};
 				}
-
-				// tests for the presence of essential blocks in the configuration:
-				if (!("experiment" in this._config))
+				if("SOILE" in this._config)
 				{
-					throw "missing experiment block in configuration";
-				}
-				if (!("name" in this._config.experiment))
-				{
-					throw "missing name in experiment block in configuration";
-				}
-				if (!("fullpath" in this._config.experiment))
-				{
-					throw "missing fullpath in experiment block in configuration";
-				}
-				if (!("pavlovia" in this._config))
-				{
-					throw "missing pavlovia block in configuration";
-				}
-				if (!("URL" in this._config.pavlovia))
-				{
-					throw "missing URL in pavlovia block in configuration";
-				}
-				if (!("gitlab" in this._config))
-				{
-					throw "missing gitlab block in configuration";
-				}
-				if (!("projectId" in this._config.gitlab))
-				{
-					throw "missing projectId in gitlab block in configuration";
-				}
-
-				this._config.environment = ExperimentHandler.Environment.SERVER;
+					this._config.experiment = {
+						name,
+						saveFormat: ExperimentHandler.SaveFormat.SOILE,
+						saveIncompleteResults: true,
+						keys: [],
+					}
+					this._config.environment = ExperimentHandler.Environment.LOCAL
+					
+				}				
+				else{
+				
+					// tests for the presence of essential blocks in the configuration:
+					if (!("experiment" in this._config))
+					{
+						throw "missing experiment block in configuration";
+					}
+					if (!("name" in this._config.experiment))
+					{
+						throw "missing name in experiment block in configuration";
+					}
+					if (!("fullpath" in this._config.experiment))
+					{
+						throw "missing fullpath in experiment block in configuration";
+					}
+					if (!("pavlovia" in this._config))
+					{
+						throw "missing pavlovia block in configuration";
+					}
+					if (!("URL" in this._config.pavlovia))
+					{
+						throw "missing URL in pavlovia block in configuration";
+					}
+					if (!("gitlab" in this._config))
+					{
+						throw "missing gitlab block in configuration";
+					}
+					if (!("projectId" in this._config.gitlab))
+					{
+						throw "missing projectId in gitlab block in configuration";
+					}
+					this._config.environment = ExperimentHandler.Environment.SERVER;
+				}			
 			}
 			// otherwise we create an ad-hoc configuration:
 			else

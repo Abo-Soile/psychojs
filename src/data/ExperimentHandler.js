@@ -349,6 +349,10 @@ export class ExperimentHandler extends PsychObject
 				util.offerDataForDownload("results.json", JSON.stringify(documents), "application/json");
 			}
 		}
+		else if (this._psychoJS.config.experiment.saveFormat === ExperimentHandler.SaveFormat.SOILE)
+		{
+			
+		}
 	}
 
 	/**
@@ -427,6 +431,11 @@ ExperimentHandler.SaveFormat = {
 	 * Results are saved to a database
 	 */
 	DATABASE: Symbol.for("DATABASE"),
+
+	/**
+	 * Upload Results to using SOILE
+	 */
+	SOILE: Symbol.for("SOILE"),
 };
 
 /**
