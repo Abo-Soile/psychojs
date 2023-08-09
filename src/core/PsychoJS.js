@@ -585,8 +585,8 @@ export class PsychoJS {
 					if (!("projectId" in this._config.gitlab)) {
 						throw "missing projectId in gitlab block in configuration";
 					}
+					this._config.environment = ExperimentHandler.Environment.SERVER;
 				}
-				this._config.environment = ExperimentHandler.Environment.SERVER;
 			}
 			// otherwise we create an ad-hoc configuration:
 			else {
