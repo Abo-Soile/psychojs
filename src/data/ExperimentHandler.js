@@ -339,12 +339,12 @@ export class ExperimentHandler extends PsychObject {
 		) {
 			let documents = [];
 
-			for (let r = 0; r < data.length; r++) {
+			for (let r = 0; r < this._trialsData.length; r++) {
 				let doc = {
 					__datetime: this._datetime,
 				};
 				for (let h = 0; h < attributes.length; h++) {
-					doc[attributes[h]] = data[r][attributes[h]];
+					doc[attributes[h]] = this._trialsData[r][attributes[h]];
 				}
 
 				documents.push(doc);
